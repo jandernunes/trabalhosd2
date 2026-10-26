@@ -3,4 +3,3 @@ grpcio-tools
 protobuf
 tinytuya
 flux_led
-flask

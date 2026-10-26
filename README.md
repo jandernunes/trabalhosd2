@@ -18,7 +18,7 @@ Trabalho de **Distribuição de Processos e Dados** (UFC, Prof. Dr. Paulo A. L. 
 | [`gateway/`](gateway/README.md) | Gateway: descoberta, UDP, gRPC, TCP, consultas, SQLite (Java) | A (+ C nas consultas) |
 | [`fontes/`](fontes/README.md) | Fontes de dados (Python), uma subpasta por processo | B (reais) e C (simulados) |
 | [`cliente_cli/`](cliente_cli/README.md) | Cliente de linha de comando (Python) | C |
-| [`dashboard/`](dashboard/README.md) | Cliente web com gráficos (extra) | D |
+| [`dashboard/`](dashboard/README.md) | Cliente web com gráficos em Next.js (extra) | D |
 | [`scripts/`](scripts/README.md) | Geração de código e subida do sistema inteiro | integração (A) |
 | [`docs/`](docs/) | Planejamento, arquitetura | equipe |
 | [`apresentacao/`](apresentacao/README.md) | Slides, roteiro e instruções de gravação do vídeo | D |
@@ -29,6 +29,7 @@ Trabalho de **Distribuição de Processos e Dados** (UFC, Prof. Dr. Paulo A. L. 
 python -m pip install -r requirements.txt
 python -m grpc_tools.protoc -I proto --python_out=gen/python --grpc_python_out=gen/python proto/aquario.proto
 cd gateway && mvn -q package && cd ..
+cd dashboard && npm install && cd ..
 ```
 
 ```powershell
