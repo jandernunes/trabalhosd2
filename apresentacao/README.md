@@ -24,7 +24,7 @@ A especificação pede foco em: **domínio escolhido**, **formato das mensagens*
 | 10 | Adaptadores | O Gateway não conhece Tuya nem Magic Home: tabela "protocolo por baixo" | B |
 | 11 | Consultas e persistência | As 5 consultas + SQLite | C |
 | 12 | Segurança do aquário | pH baixo → Gateway desliga o CO2; failsafe de 90 s na tomada | A |
-| 13 | Tecnologias | Java (grpc-java, protobuf, sqlite-jdbc, Maven); Python (grpcio, protobuf, tinytuya, flux_led, Flask); JS (Chart.js) | todos |
+| 13 | Tecnologias | Java (grpc-java, protobuf, sqlite-jdbc, Maven); Python (grpcio, protobuf, tinytuya, flux_led); TypeScript (Next.js, protobufjs, Recharts) | todos |
 | 14 | Dificuldades e lições | VPN e multicast, local key da Tuya, IPs dinâmicos, TCP sem fronteira de mensagem | todos |
 
 **Dicas:** trechos do `.proto` em fonte monoespaçada e grande (no máximo ~12 linhas por slide); um diagrama de sequência simples no slide 6. Exporte em **PDF** para o formulário.

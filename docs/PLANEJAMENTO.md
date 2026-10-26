@@ -70,7 +70,7 @@ Todas as mensagens são serializadas com Protocol Buffers. O contrato completo e
 | Leituras (fontes → Gateway) | UDP unicast | `gateway:50002` |
 | Comandos (Gateway → fontes controláveis) | gRPC | `:50051` luminária, `:50052` CO2, `:50053` tomada luminária |
 | Cliente ↔ Gateway | TCP, prefixo de 4 bytes | `gateway:50010` |
-| Dashboard (extra) | HTTP | `:8080` |
+| Dashboard (extra) | HTTP (Next.js) | `:3000` |
 
 ---
 
@@ -85,7 +85,7 @@ Todas as mensagens são serializadas com Protocol Buffers. O contrato completo e
 | **Sensor de temperatura** | simulado: oscila perto de 26 °C | ❌ | °C | **> 30 °C** |
 | **Gateway** | descoberta, recepção UDP, comandos gRPC, servidor TCP, consultas, SQLite, detecção de offline, **desliga o CO2 com pH baixo** | cliente | — | — |
 | **Cliente CLI** | listar fontes, comandos, consultas, histórico | — | — | — |
-| **Dashboard (extra)** | cartões das fontes, gráficos, comandos | — | — | — |
+| **Dashboard Next.js (extra)** | cartões das fontes, gráficos, comandos; conecta ao Gateway por TCP pelos Route Handlers | — | — | — |
 
 Os horários das tomadas continuam no app Smart Life. O sistema monitora as mudanças, comanda manualmente e reage a alertas.
 
@@ -105,7 +105,7 @@ Mais o **histórico** (série temporal) para o CLI e o dashboard. As fórmulas e
 
 ## 6. Pontuação extra
 
-- **Mais de uma linguagem:** Gateway em **Java**; fontes, CLI e backend do dashboard em **Python**; frontend em **JavaScript**.
+- **Mais de uma linguagem:** Gateway em **Java**; fontes e CLI em **Python**; dashboard em **TypeScript (Next.js)**.
 - **Persistência:** SQLite no Gateway, com consulta de histórico pelo Cliente.
 - **Interface gráfica:** dashboard web com séries temporais.
 
@@ -124,7 +124,7 @@ Cada pasta tem um `README.md` que detalha **o que implementar**, **como testar**
 | `fontes/tomada/` | tomadas Tuya (CO2 e luminária secundária) | **B** |
 | `fontes/sensor_ph/`, `fontes/sensor_temperatura/` | sensores simulados | **C** |
 | `cliente_cli/` | cliente de linha de comando | **C** |
-| `dashboard/` | backend Flask + página web | **D** |
+| `dashboard/` | Next.js: Route Handlers (cliente TCP do Gateway) + página com gráficos | **D** |
 | `scripts/` | gerar o proto, subir e parar o sistema | **A** (integração) |
 | `apresentacao/` | slides, roteiro e gravação do vídeo | **D** (com todos) |
 
@@ -161,6 +161,7 @@ A integração é feita **por marcos**. Cada marco só começa quando o anterior
 python -m pip install -r requirements.txt
 python -m grpc_tools.protoc -I proto --python_out=gen/python --grpc_python_out=gen/python proto/aquario.proto
 cd gateway && mvn -q package
+cd ../dashboard && npm install
 ```
 Para o hardware real: copiar `fontes/config.exemplo.json` para `fontes/config.json` e preencher (as keys saem do `python -m tinytuya wizard`).
 
@@ -225,7 +226,7 @@ Ordem: Gateway → tomadas → luminária → sensor de pH → temperatura → C
 | 5b — ≥ 3 tipos, ≥ 1 controlável, ≥ 1 não controlável | 5 fontes (3 controláveis, 2 não) | I1 |
 | 5c — envio imediato por evento | pH, temperatura, tomadas | I5, I6 |
 | 5d — ≥ 3 consultas agregadas | 5 consultas | I7 |
-| Extras — linguagens, persistência, GUI | Java + Python + JS, SQLite, dashboard | M4, M7 |
+| Extras — linguagens, persistência, GUI | Java + Python + TypeScript, SQLite, dashboard Next.js | M4, M7 |
 
 ---
 

@@ -8,11 +8,12 @@
 1. **Nada é trocado fora do Protobuf**: UDP, gRPC e TCP usam só as mensagens deste arquivo.
 2. **Nunca reutilize nem renumere campos.** Para mudar algo, crie um campo novo e avise o grupo.
 3. Cada linguagem gera o próprio código a partir deste arquivo. O código gerado **não** vai para o git (`gen/`, `target/`).
-   - Python (fontes, CLI, dashboard):
+   - Python (fontes e CLI):
      ```bash
      python -m grpc_tools.protoc -I proto --python_out=gen/python --grpc_python_out=gen/python proto/aquario.proto
      ```
    - Java (gateway): o `protobuf-maven-plugin` lê `../proto/aquario.proto` no build (ver `gateway/README.md`).
+   - TypeScript (dashboard Next.js): o `protobufjs` carrega `../proto/aquario.proto` em tempo de execução, sem gerar código (ver `dashboard/README.md`).
 
 ## Endereços e portas (fixos)
 
@@ -25,7 +26,7 @@
 | gRPC luminária Smartled | gRPC (HTTP/2) | `:50051` | Fonte `luminaria-smartled` |
 | gRPC tomada CO2 | gRPC | `:50052` | Fonte `tomada-co2` |
 | gRPC tomada luminária | gRPC | `:50053` | Fonte `tomada-luminaria` |
-| Dashboard (extra) | HTTP | `:8080` | Backend do dashboard |
+| Dashboard (extra) | HTTP | `:3000` | Next.js (`dashboard/`) |
 
 ## Identificadores das fontes (`fonte_id`)
 

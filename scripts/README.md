@@ -21,7 +21,7 @@ Start-Process powershell -ArgumentList "-NoExit","-Command","`$host.UI.RawUI.Win
 1. `gateway` (já começa a enviar a descoberta)
 2. `tomada-co2`, `tomada-luminaria`, `luminaria-smartled`
 3. `sensor-ph` (depois do CO2, porque consulta o gRPC dele), `sensor-temperatura`
-4. `cliente_cli` e, se houver, `dashboard`
+4. `cliente_cli` e, se houver, `dashboard` (`npm start` em `dashboard/`, http://localhost:3000)
 
 A ordem não é obrigatória: o Gateway reenvia a descoberta a cada 30 s, então quem subir depois aparece sozinho. Mas seguir a ordem deixa o vídeo mais claro.
 

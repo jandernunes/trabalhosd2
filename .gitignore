@@ -29,8 +29,10 @@ target/
 .idea/
 *.iml
 
-# Node (se o dashboard usar)
+# Node / Next.js (dashboard)
 node_modules/
+.next/
+.env.local
 
 # Vídeo (vai para o YouTube, não para o git)
 *.mp4
