@@ -21,12 +21,11 @@
 
 ## Ordem de subida
 
-1. `gateway` (já começa a enviar a descoberta)
-2. `tomada-co2`, `tomada-luminaria`, `luminaria-smartled`
-3. `sensor-ph` (depois do CO2, porque consulta o gRPC dele), `sensor-temperatura`
-4. `cliente_cli` e, se houver, `dashboard` (`npm start` em `dashboard/`, http://localhost:3000)
+1. `tomada-co2`, `tomada-luminaria`, `luminaria-smartled`, `sensor-ph`, `sensor-temperatura` (ficam esperando o Gateway)
+2. `gateway`: o pedido de descoberta enviado **ao iniciar** já encontra todas as fontes de uma vez. É a cena do requisito 4 no vídeo
+3. `dashboard` (`npm run dev` em `dashboard/`, http://localhost:3000) e `cliente_cli`
 
-A ordem não é obrigatória: o Gateway reenvia a descoberta a cada 30 s, então quem subir depois aparece sozinho. Mas seguir a ordem deixa o vídeo mais claro.
+A ordem não é obrigatória: o Gateway reenvia a descoberta a cada 30 s, então quem subir depois aparece sozinho, mas pode levar até 30 s.
 
 ## Antes de rodar (checklist de ambiente)
 

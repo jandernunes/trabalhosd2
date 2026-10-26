@@ -98,6 +98,10 @@ class Fonte:
             if not self.em_falha:
                 try:
                     medidas = self.ler()
+                    if self.descoberta.gateway is None:
+                        # ainda não há para quem enviar: o evento fica para quando o gateway aparecer
+                        self._acordar.wait(self.amostragem_s)
+                        continue
                     motivos = self.eventos(medidas, agora)
                     if motivos:
                         if self.enviador.enviar(medidas, evento=True, motivo=",".join(motivos)):

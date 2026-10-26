@@ -37,13 +37,14 @@ function Abrir([string]$titulo, [string]$comando, [string]$pasta = $raiz) {
 }
 
 Remove-Item $pids -ErrorAction SilentlyContinue
-Abrir "gateway" "java -jar '$jar' --ip-local $IpLocal" "$raiz\gateway"
-Start-Sleep -Seconds 2
+# Fontes primeiro: quando o gateway sobe, o pedido de descoberta inicial já encontra todas (senão esperam o reenvio de 30 s).
 Abrir "tomada-co2" "& '$python' -m fontes.tomada --ip-local $IpLocal --id tomada-co2 --tipo TOMADA_CO2 --porta-grpc 50052 --backend $tomada --failsafe"
 Abrir "tomada-luminaria" "& '$python' -m fontes.tomada --ip-local $IpLocal --id tomada-luminaria --tipo TOMADA_LUMINARIA --porta-grpc 50053 --backend $tomada"
 Abrir "luminaria-smartled" "& '$python' -m fontes.luminaria --ip-local $IpLocal --backend $luz"
 Abrir "sensor-ph" "& '$python' -m fontes.sensor_ph --ip-local $IpLocal --ph-com-co2 $PhComCo2 --tau-s $TauS"
 Abrir "sensor-temperatura" "& '$python' -m fontes.sensor_temperatura --ip-local $IpLocal --cenario $Cenario"
+Start-Sleep -Seconds 4
+Abrir "gateway" "java -jar '$jar' --ip-local $IpLocal" "$raiz\gateway"
 if (-not $SemDashboard) {
     if (-not (Test-Path "$raiz\dashboard\node_modules")) { Push-Location "$raiz\dashboard"; npm install; Pop-Location }
     Abrir "dashboard" "`$env:GATEWAY_ADDR='${IpLocal}:50010'; npm run dev" "$raiz\dashboard"
