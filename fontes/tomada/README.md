@@ -51,7 +51,7 @@ dps = d.status()["dps"]        # {'1': True, '18': 37, '19': 82, '20': 2225, ...
 - Periódica: `ligada`, `potencia` (W), `corrente` (mA), `tensao` (V).
 - **Eventos imediatos:**
   - `mudou_estado`: o estado mudou por fora do sistema (timer do Smart Life ou botão físico).
-  - `ligada_sem_consumo`: ligada com potência < 0,5 W por **10 s seguidos**. Indica lâmpada queimada ou solenoide com defeito. A espera evita um falso alarme logo depois de ligar, quando a tomada ainda não atualizou a potência.
+  - `ligada_sem_consumo`: ligada com potência < 0,5 W por **60 s seguidos**. Indica lâmpada queimada ou solenoide com defeito. A espera evita um falso alarme logo depois de ligar: no teste com o hardware real, a tomada Gaya levou ~30 s para atualizar a potência.
 
 ## Failsafe do CO2 (`--failsafe`)
 

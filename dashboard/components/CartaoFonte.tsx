@@ -24,6 +24,10 @@ export default function CartaoFonte({ fonte, aoMudar }: { fonte: InfoFonte; aoMu
     }
   }
 
+  function enviarBrilho(valor: number) {
+    executar({ parametro: { nome: "intensidade", valor } }).then(() => setBrilho(null));
+  }
+
   const medidas = (fonte.ultimaLeitura?.medidas ?? []).filter((m) => m.nome !== "ligada");
   const principal = medidas[0];
   const selo = !fonte.online ? ["off", "OFFLINE"] : estado?.emFalha ? ["falha", "FALHA"] : ["on", "ONLINE"];
@@ -63,11 +67,11 @@ export default function CartaoFonte({ fonte, aoMudar }: { fonte: InfoFonte; aoMu
                   onChange={(e) => setRampa(e.target.value)}
                   onBlur={() => executar({ parametro: { nome: "rampa_s", valor: Number(rampa) } })} /> s
               </div>
-              <input type="range" min={0} max={100} value={brilho ?? intensidade}
+              {/* envia só ao soltar (ou ao usar o teclado), não a cada pixel; lê o valor do elemento, não do estado */}
+              <input type="range" min={0} max={100} value={brilho ?? intensidade} aria-label="Intensidade da luminária"
                 onChange={(e) => setBrilho(Number(e.target.value))}
-                onPointerUp={() => { // envia só ao soltar, não a cada pixel
-                  if (brilho !== null) executar({ parametro: { nome: "intensidade", valor: brilho } }).then(() => setBrilho(null));
-                }} />
+                onPointerUp={(e) => enviarBrilho(Number(e.currentTarget.value))}
+                onKeyUp={(e) => { if (e.key.startsWith("Arrow") || ["Home", "End", "PageUp", "PageDown"].includes(e.key)) enviarBrilho(Number(e.currentTarget.value)); }} />
             </div>
           )}
         </>

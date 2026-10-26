@@ -9,7 +9,9 @@ from .backends import TomadaSimulada, TomadaTuya
 
 FAILSAFE_S = 90         # sem DiscoveryRequest por esse tempo -> desliga o CO2
 SEM_CONSUMO_W = 0.5
-SEM_CONSUMO_S = 10      # ligada sem consumo por esse tempo -> evento (lâmpada queimada, solenoide com defeito)
+# ligada sem consumo por esse tempo -> evento (lâmpada queimada, solenoide com defeito).
+# A tomada Gaya/Tuya leva ~30 s para atualizar a potência depois de ligar (medido no hardware real).
+SEM_CONSUMO_S = 60
 
 
 class Tomada(Fonte):
