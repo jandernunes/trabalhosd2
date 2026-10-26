@@ -32,7 +32,10 @@
 ```bash
 python -m cliente_cli --gateway 192.168.0.33:50010
 ```
-(com `PYTHONPATH=gen/python`)
+Para rodar sem o prompt interativo, útil em testes e no roteiro do vídeo, use `-c` (pode repetir):
+```bash
+python -m cliente_cli --gateway 192.168.0.33:50010 -c fontes -c "consumo 60"
+```
 
 ## Pronto quando
 

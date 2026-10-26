@@ -23,11 +23,11 @@ Trabalho de **Distribuição de Processos e Dados** (UFC, Prof. Dr. Paulo A. L. 
 | [`docs/`](docs/) | Planejamento, arquitetura | equipe |
 | [`apresentacao/`](apresentacao/README.md) | Slides, roteiro e instruções de gravação do vídeo | D |
 
-## Início rápido (depois de implementado)
+## Início rápido
 
 ```bash
-python -m pip install -r requirements.txt
-python -m grpc_tools.protoc -I proto --python_out=gen/python --grpc_python_out=gen/python proto/aquario.proto
+python -m venv .venv && .venv/Scripts/python -m pip install -r requirements.txt
+./scripts/gerar_proto.sh            # ou ./scripts/gerar_proto.ps1 no PowerShell
 cd gateway && mvn -q package && cd ..
 cd dashboard && npm install && cd ..
 ```

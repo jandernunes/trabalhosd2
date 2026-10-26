@@ -3,18 +3,21 @@
 **Responsável:** quem fizer a integração (Pessoa A, com apoio de todos).
 **Objetivo:** subir o sistema inteiro com **um comando**, igual no ensaio e na gravação do vídeo.
 
-## Scripts a criar
+## Scripts
 
 | Script | O que faz |
 |---|---|
 | `gerar_proto.ps1` / `gerar_proto.sh` | Gera o código Python em `gen/python` (`grpc_tools.protoc`). O Java gera sozinho no `mvn package` |
-| `subir_tudo.ps1` | Abre **uma janela de terminal por processo**, com título, na ordem abaixo. Parâmetros: `-IpLocal`, `-Backend sim\|real` |
-| `parar_tudo.ps1` | Encerra todos os processos do sistema |
+| `subir_tudo.ps1` | Abre **uma janela de terminal por processo**, com título, na ordem abaixo. Gera o proto e compila o gateway se faltar |
+| `parar_tudo.ps1` | Encerra todos os processos abertos pelo `subir_tudo.ps1` (PIDs em `scripts/.pids`) |
 
-Exemplo de uma linha do `subir_tudo.ps1`:
 ```powershell
-Start-Process powershell -ArgumentList "-NoExit","-Command","`$host.UI.RawUI.WindowTitle='tomada-co2'; `$env:PYTHONPATH='gen/python'; python -m fontes.tomada --ip-local $IpLocal --id tomada-co2 --tipo TOMADA_CO2 --porta-grpc 50052 --backend $BackendTomada --failsafe"
+./scripts/subir_tudo.ps1 -IpLocal 192.168.0.33 -Backend sim
+./scripts/subir_tudo.ps1 -IpLocal 192.168.0.33 -Backend real -PhComCo2 6.2 -TauS 30   # demo do alerta de pH
+./scripts/subir_tudo.ps1 -IpLocal 192.168.0.33 -Cenario superaquecimento -SemDashboard
+./scripts/parar_tudo.ps1
 ```
+`-Backend real` usa `tuya` nas tomadas e `magichome` na luminária, e exige o `fontes/config.json`. Os sensores são sempre simulados. Os scripts usam o Python do `.venv` se ele existir.
 
 ## Ordem de subida
 
