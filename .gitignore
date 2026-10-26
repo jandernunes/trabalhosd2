@@ -38,3 +38,10 @@ node_modules/
 *.mp4
 *.mkv
 *.mov
+
+# PIDs do subir_tudo.ps1
+scripts/.pids
+
+# Next.js / ferramentas locais
+*.tsbuildinfo
+.claude/

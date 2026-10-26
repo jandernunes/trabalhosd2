@@ -17,7 +17,7 @@ Cada fonte é **um processo separado**, como pede a especificação.
 ## Esqueleto comum (todas as fontes)
 
 1. **Descoberta:** entra no grupo `239.10.10.10:50000`. Ao receber um `DiscoveryRequest`, guarda `gateway_ip` e `porta_dados` e responde com um `DiscoveryResponse` (unicast) para `gateway_ip:porta_resposta`.
-2. **Envio de dados:** só começa depois de conhecer o Gateway. Envia uma `Leitura` a cada `intervalo_envio_s` (padrão **10 s**) e **imediatamente** quando há evento (`evento=true` e `motivo_evento`).
+2. **Envio de dados:** só começa depois de conhecer o Gateway. O equipamento é **amostrado a cada 1–2 s** para detectar eventos: a `Leitura` sai a cada `intervalo_envio_s` (padrão **10 s**) e **imediatamente** quando há evento (`evento=true` e `motivo_evento`).
 3. **gRPC (só as controláveis):** servidor `FonteControlavel` na porta da tabela. Os comandos mudam o estado e a resposta é sempre o `Status` atual.
 4. **Falha simulada:** `SimularFalha(ativa=true)` para o envio de leituras (o Gateway marca OFFLINE) e faz `Status.em_falha=true`. `ativa=false` retoma.
 5. **Backend trocável:** `--backend sim` funciona sem hardware. **Todo o desenvolvimento e os testes de integração usam `sim`**, e o hardware real só entra no fim.
@@ -29,7 +29,7 @@ python -m pip install -r requirements.txt
 python -m grpc_tools.protoc -I proto --python_out=gen/python --grpc_python_out=gen/python proto/aquario.proto
 ```
 
-Depois, com `PYTHONPATH=gen/python` (PowerShell: `$env:PYTHONPATH="gen/python"`):
+Depois, da raiz do repositório. O `fontes/comum/__init__.py` já põe `gen/python` no `sys.path`, então não precisa de `PYTHONPATH`:
 
 ```bash
 python -m fontes.luminaria --ip-local 192.168.0.33 --backend sim
@@ -43,7 +43,18 @@ Cada pasta vira um pacote Python com `__init__.py` e `__main__.py`.
 
 ## Configuração do hardware real
 
-Copie [`config.exemplo.json`](config.exemplo.json) para `config.json` e preencha com IP, device id e local key. O **`config.json` está no `.gitignore`**: as chaves das tomadas nunca vão para o GitHub.
+Copie [`config.exemplo.json`](config.exemplo.json) para `config.json` e ajuste:
+- `devices_json`: caminho do `devices.json` gerado pelo `python -m tinytuya wizard`. As **chaves são lidas de lá**, pelo `nome` da tomada no Smart Life ("Tomada CO2", "Tomada Luminária"), e nunca precisam ser copiadas.
+- `ip` de cada tomada e da luminária. Se a tomada ficar sem IP, o `tinytuya` procura pelo device id na rede.
+
+O **`config.json` e o `devices.json` estão no `.gitignore`**: as chaves das tomadas nunca vão para o GitHub.
+
+## Testes
+
+```bash
+python -m unittest discover -s . -p "test_*.py" -t .
+```
+Cobrem o modelo do pH, o detector de limiar (histerese e repetição), a conversão de DPS das tomadas e o enquadramento TCP do cliente.
 
 ## Segurança (aquário real)
 

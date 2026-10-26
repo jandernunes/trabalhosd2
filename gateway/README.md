@@ -56,8 +56,10 @@ Gere o código do proto com o `protobuf-maven-plugin` (`org.xolstice.maven.plugi
 ## Argumentos de linha de comando
 
 ```
-java -jar gateway.jar --ip-local 192.168.0.33 [--db dados/aquario.db]
+cd gateway && mvn -q package          # gera target/gateway.jar e roda os testes JUnit das consultas
+java -jar target/gateway.jar --ip-local 192.168.0.33 [--db dados/aquario.db] [--silencioso]
 ```
+`--silencioso` esconde as linhas `[DADOS]` e mantém descoberta, alertas e comandos.
 `--ip-local` é **obrigatório**: define a interface do multicast (`MulticastSocket.setNetworkInterface(NetworkInterface.getByInetAddress(...))`) e o `gateway_ip` anunciado. Sem isso, em PCs com VPN, WSL ou Hyper-V, o multicast sai pela interface errada (já aconteceu nos testes).
 
 ## Saída esperada no console

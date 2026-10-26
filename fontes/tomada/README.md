@@ -35,7 +35,7 @@ d.set_socketPersistent(False)
 d.turn_on(); d.turn_off()
 dps = d.status()["dps"]        # {'1': True, '18': 37, '19': 82, '20': 2225, ...}
 ```
-`dev_id`, `ip` e `local_key` vêm de `config.json` (`tomadas.<fonte_id>`). A `local_key` muda se a tomada for pareada de novo; nesse caso, rode `python -m tinytuya wizard` outra vez.
+`config.json` → `tomadas.<fonte_id>` traz o `nome` (como no Smart Life) e o `ip`. O `dev_id` e a `local_key` são lidos do `devices.json` do wizard (`devices_json` no config). A `local_key` muda se a tomada for pareada de novo; nesse caso, rode `python -m tinytuya wizard` outra vez.
 
 ## Comandos gRPC
 
@@ -51,7 +51,7 @@ dps = d.status()["dps"]        # {'1': True, '18': 37, '19': 82, '20': 2225, ...
 - Periódica: `ligada`, `potencia` (W), `corrente` (mA), `tensao` (V).
 - **Eventos imediatos:**
   - `mudou_estado`: o estado mudou por fora do sistema (timer do Smart Life ou botão físico).
-  - `ligada_sem_consumo`: ligada com potência < 0,5 W em 2 leituras seguidas. Indica lâmpada queimada ou solenoide com defeito.
+  - `ligada_sem_consumo`: ligada com potência < 0,5 W por **10 s seguidos**. Indica lâmpada queimada ou solenoide com defeito. A espera evita um falso alarme logo depois de ligar, quando a tomada ainda não atualizou a potência.
 
 ## Failsafe do CO2 (`--failsafe`)
 

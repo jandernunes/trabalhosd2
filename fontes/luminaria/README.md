@@ -20,7 +20,7 @@ b.turnOn(); b.turnOff()
 b.setWarmWhite(60)             # 0–100 % (equivalente a `flux_led IP -w 60`, testado)
 b.update_state(); b.is_on; b.brightness   # brightness vem em 0–255 → converter para %
 ```
-O IP vem de `config.json` (`luminaria.ip`). Recomenda-se reservar o IP no DHCP do roteador.
+O IP vem de `config.json` (`luminaria.ip`) ou de `--ip`. Recomenda-se reservar o IP no DHCP do roteador.
 
 ## Comandos gRPC
 

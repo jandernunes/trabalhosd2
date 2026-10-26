@@ -18,7 +18,7 @@ temperatura = base + amplitude * sin(2π * t / periodo) + ruido(±0,1)
 | `--amplitude` | 0.8 | variação "dia/noite" |
 | `--periodo-s` | 600 | acelerado (10 min) para aparecer no gráfico do vídeo |
 | `--limiar` | 30.0 | acima disso → evento `temperatura_alta` |
-| `--cenario` | `normal` | `superaquecimento` sobe a base 0,1 °C por leitura até passar o limiar (para a demo) |
+| `--cenario` | `normal` | `superaquecimento` sobe a base 0,1 °C por amostra (1 s) até 32 °C. Passa do limiar em ~40 s (para a demo) |
 | `--intervalo` | 10 | s |
 
 ## Leituras UDP
