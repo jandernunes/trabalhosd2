@@ -1,0 +1,38 @@
+# Segredos do hardware real (chaves das tomadas, credenciais da Tuya)
+fontes/config.json
+devices.json
+tinytuya.json
+tuya-raw.json
+snapshot.json
+
+# Especificação do professor (material da disciplina, não redistribuir)
+Especifica*.pdf
+
+# Código gerado a partir do proto
+gen/
+*_pb2.py
+*_pb2_grpc.py
+
+# Dados do Gateway
+*.db
+gateway/dados/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Java / Maven
+target/
+*.class
+.idea/
+*.iml
+
+# Node (se o dashboard usar)
+node_modules/
+
+# Vídeo (vai para o YouTube, não para o git)
+*.mp4
+*.mkv
+*.mov

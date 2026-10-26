@@ -1,0 +1,19 @@
+{
+  "luminaria": {
+    "ip": "192.168.0.71"
+  },
+  "tomadas": {
+    "tomada-co2": {
+      "dev_id": "COLE_AQUI_O_DEVICE_ID",
+      "ip": "192.168.0.2",
+      "local_key": "COLE_AQUI_A_LOCAL_KEY",
+      "version": 3.3
+    },
+    "tomada-luminaria": {
+      "dev_id": "COLE_AQUI_O_DEVICE_ID",
+      "ip": "192.168.0.4",
+      "local_key": "COLE_AQUI_A_LOCAL_KEY",
+      "version": 3.3
+    }
+  }
+}

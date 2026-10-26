@@ -1,0 +1,198 @@
+// Contrato único do sistema "Aquário Plantado Inteligente".
+// Todas as mensagens trocadas entre Gateway, Fontes e Cliente estão aqui.
+// Alterações neste arquivo devem ser combinadas com toda a equipe (ver proto/README.md).
+
+syntax = "proto3";
+
+package aquario;
+
+option java_package = "br.ufc.sd.aquario.proto";
+option java_multiple_files = true;
+
+// ---------------------------------------------------------------------------
+// Tipos comuns
+// ---------------------------------------------------------------------------
+
+enum TipoFonte {
+  TIPO_DESCONHECIDO = 0;
+  LUMINARIA = 1;           // Smartled (Magic Home 0x41) - controlável
+  TOMADA_CO2 = 2;          // Tomada Gaya/Tuya do CO2 - controlável
+  TOMADA_LUMINARIA = 3;    // Tomada Gaya/Tuya da luminária secundária - controlável
+  SENSOR_PH = 4;           // simulado - não controlável
+  SENSOR_TEMPERATURA = 5;  // simulado - não controlável
+}
+
+// Estado operacional de uma fonte (enviado na descoberta e devolvido pelo gRPC).
+message Status {
+  bool ligada = 1;
+  uint32 intervalo_envio_s = 2;        // período de envio das leituras UDP
+  map<string, double> parametros = 3;  // ex.: "intensidade" -> 60, "rampa_s" -> 30
+  bool em_falha = 4;                   // true quando a falha está sendo simulada
+  string detalhe = 5;                  // texto livre (ex.: "backend=tuya")
+}
+
+// ---------------------------------------------------------------------------
+// Descoberta (UDP multicast 239.10.10.10:50000)
+// ---------------------------------------------------------------------------
+
+// Gateway -> grupo multicast. Enviado ao iniciar e a cada 30 s.
+message DiscoveryRequest {
+  string gateway_ip = 1;
+  uint32 porta_resposta = 2;  // porta UDP unicast onde o Gateway espera DiscoveryResponse (50001)
+  uint32 porta_dados = 3;     // porta UDP onde o Gateway recebe Leitura (50002)
+}
+
+// Fonte -> Gateway (UDP unicast para gateway_ip:porta_resposta).
+message DiscoveryResponse {
+  string fonte_id = 1;     // único e estável, ex.: "tomada-co2"
+  TipoFonte tipo = 2;
+  string ip = 3;           // IP da fonte na rede local
+  uint32 porta_grpc = 4;   // 0 para fontes não controláveis
+  bool controlavel = 5;
+  Status estado = 6;       // estado inicial
+}
+
+// ---------------------------------------------------------------------------
+// Fluxo de dados (UDP unicast para gateway_ip:porta_dados) - 1 Leitura por datagrama
+// ---------------------------------------------------------------------------
+
+message Medida {
+  string nome = 1;     // "ligada", "intensidade", "potencia", "corrente", "tensao", "ph", "temperatura"
+  double valor = 2;    // booleanos: 1.0 / 0.0
+  string unidade = 3;  // "", "%", "W", "mA", "V", "pH", "C"
+}
+
+message Leitura {
+  string fonte_id = 1;
+  TipoFonte tipo = 2;
+  int64 timestamp_ms = 3;      // epoch em milissegundos
+  repeated Medida medidas = 4;
+  bool evento = 5;             // true = envio imediato (limiar, mudança de estado, anomalia)
+  string motivo_evento = 6;    // ex.: "ph_baixo", "temperatura_alta", "mudou_estado", "ligada_sem_consumo"
+}
+
+// ---------------------------------------------------------------------------
+// gRPC: serviço exposto pelas fontes controláveis (Gateway é o cliente)
+// ---------------------------------------------------------------------------
+
+service FonteControlavel {
+  rpc GetStatus(Vazio) returns (Status);
+  rpc SetPower(ComandoPower) returns (Status);
+  rpc SetParametro(ComandoParametro) returns (Status);
+  rpc SimularFalha(ComandoFalha) returns (Status);
+}
+
+message Vazio {}
+
+message ComandoPower {
+  bool ligada = 1;
+}
+
+// Parâmetros aceitos (a fonte responde com erro INVALID_ARGUMENT se não reconhecer):
+//   todas as controláveis: "intervalo_envio_s"
+//   LUMINARIA:             "intensidade" (0-100), "rampa_s" (duração da transição, 0 = imediata)
+message ComandoParametro {
+  string nome = 1;
+  double valor = 2;
+}
+
+message ComandoFalha {
+  bool ativa = 1;  // true = para de enviar leituras e reporta em_falha
+}
+
+// ---------------------------------------------------------------------------
+// Cliente <-> Gateway (TCP 50010)
+// Enquadramento: cada mensagem é precedida por 4 bytes (uint32 big-endian) com o tamanho.
+// ---------------------------------------------------------------------------
+
+message Requisicao {
+  oneof tipo {
+    ListarFontes listar = 1;
+    Comando comando = 2;
+    Consulta consulta = 3;
+    PedidoHistorico historico = 4;
+  }
+}
+
+message ListarFontes {}
+
+message Comando {
+  string fonte_id = 1;
+  oneof acao {
+    ComandoPower power = 2;
+    ComandoParametro parametro = 3;
+    ComandoFalha falha = 4;
+  }
+}
+
+enum TipoConsulta {
+  CONSULTA_DESCONHECIDA = 0;
+  MEDIA_DESVIO = 1;     // média, desvio padrão, mín. e máx. de uma medida de uma fonte
+  CONSUMO_WH = 2;       // energia (Wh) por tomada
+  TEMPO_LIGADO = 3;     // horas ligada por fonte controlável
+  PH_MIN_ALERTAS = 4;   // pH mínimo e número de alertas de pH
+  MAIOR_VARIACAO = 5;   // fonte/medida com maior coeficiente de variação
+}
+
+message Consulta {
+  TipoConsulta tipo = 1;
+  string fonte_id = 2;    // obrigatório só em MEDIA_DESVIO
+  string medida = 3;      // obrigatório só em MEDIA_DESVIO
+  uint32 janela_min = 4;  // janela de tempo; 0 = padrão (60 min)
+}
+
+message PedidoHistorico {
+  string fonte_id = 1;
+  string medida = 2;
+  uint32 janela_min = 3;
+  uint32 max_pontos = 4;  // 0 = sem limite
+}
+
+message InfoFonte {
+  string fonte_id = 1;
+  TipoFonte tipo = 2;
+  string ip = 3;
+  uint32 porta_grpc = 4;
+  bool controlavel = 5;
+  bool online = 6;
+  Status estado = 7;
+  Leitura ultima_leitura = 8;
+  int64 visto_em_ms = 9;
+}
+
+message ListaFontes {
+  repeated InfoFonte fontes = 1;
+}
+
+message LinhaResultado {
+  string chave = 1;    // ex.: "tomada-co2", "media", "desvio"
+  double valor = 2;
+  string unidade = 3;
+}
+
+message ResultadoConsulta {
+  string descricao = 1;
+  repeated LinhaResultado linhas = 2;
+}
+
+message Ponto {
+  int64 timestamp_ms = 1;
+  double valor = 2;
+}
+
+message SerieHistorica {
+  string fonte_id = 1;
+  string medida = 2;
+  repeated Ponto pontos = 3;
+}
+
+message Resposta {
+  bool ok = 1;
+  string erro = 2;
+  oneof corpo {
+    ListaFontes fontes = 3;
+    Status estado = 4;           // resposta a Comando
+    ResultadoConsulta resultado = 5;
+    SerieHistorica serie = 6;
+  }
+}
