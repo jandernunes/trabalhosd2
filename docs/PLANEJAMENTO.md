@@ -1,6 +1,6 @@
 # Aquário Plantado Inteligente — Planejamento do Trabalho
 
-- **Disciplina:** Distribuição de Processos e Dados (UFC), Prof. Dr. Paulo A. L. Rego
+- **Disciplina:** Sistemas Distribuídos (UFC), Prof. Dr. Paulo A. L. Rego
 - **Entregáveis:** slides, código-fonte (este repositório), vídeo de até 7 min, nomes e matrículas no formulário
 - **Versão:** 2 (26/10/2026). Acrescenta a estrutura do repositório, integração, execução, testes e gravação.
 
