@@ -1,6 +1,6 @@
 # Aquário Plantado Inteligente
 
-Trabalho de **Distribuição de Processos e Dados** (UFC, Prof. Dr. Paulo A. L. Rego): um sistema distribuído de monitoramento e controle de um **aquário plantado real**, com Gateway central, fontes de dados e Cliente.
+Trabalho de **Sistemas Distribuídos** (UFC, Prof. Dr. Paulo A. L. Rego): um sistema distribuído de monitoramento e controle de um **aquário plantado real**, com Gateway central, fontes de dados e Cliente.
 
 - **Comunicação:** UDP multicast (descoberta), UDP (leituras), gRPC (comandos), TCP (cliente). Tudo serializado com **Protocol Buffers**.
 - **Hardware real:** luminária Smartled (Magic Home), duas tomadas Wi-Fi Gaya (Tuya) com medição de energia.
