@@ -54,11 +54,28 @@ export function comandar(fonteId: string, acao: object) {
 
 export const NOMES: Record<string, string> = {
   "luminaria-smartled": "Luminária Smartled",
-  "tomada-co2": "CO2",
+  "tomada-co2": "CO₂",
   "tomada-luminaria": "Luminária secundária",
   "sensor-ph": "Sensor de pH",
   "sensor-temperatura": "Temperatura",
 };
+
+const ROTULOS: Record<string, string> = {
+  ph: "pH",
+  temperatura: "Temperatura",
+  potencia: "Potência",
+  corrente: "Corrente",
+  tensao: "Tensão",
+  intensidade: "Intensidade",
+};
+
+export function rotulo(medida: string): string {
+  return ROTULOS[medida] ?? medida;
+}
+
+export function unidade(u: string): string {
+  return u === "C" ? "°C" : u;
+}
 
 export function numero(v: number, casas = 2): string {
   return Number.isInteger(v) ? String(v) : v.toFixed(casas);
