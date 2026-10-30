@@ -27,5 +27,9 @@ class EnviadorLeituras:
                              evento=evento, motivo_evento=motivo)
         for nome, valor, unidade in medidas:
             leitura.medidas.add(nome=nome, valor=float(valor), unidade=unidade)
-        self.sock.sendto(leitura.SerializeToString(), destino)
+        try:
+            self.sock.sendto(leitura.SerializeToString(), destino)
+        except OSError as e:  # rede fora do ar (ex.: Wi-Fi voltando da hibernação): tenta de novo na próxima amostra
+            log("DADOS", f"falha ao enviar leitura: {e}")
+            return False
         return True
