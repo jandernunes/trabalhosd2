@@ -34,10 +34,11 @@ node_modules/
 .next/
 .env.local
 
-# Vídeo (vai para o YouTube, não para o git)
+# Vídeo: só a versão final comprimida (< 100 MB, limite do GitHub) vai para o git
 *.mp4
 *.mkv
 *.mov
+!apresentacao/video.mp4
 
 # PIDs do subir_tudo.ps1
 scripts/.pids
