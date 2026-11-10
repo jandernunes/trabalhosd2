@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { gateway, type Objeto } from "./gateway";
 
-/** Envia a requisição ao Gateway e devolve só o pedaço da Resposta que interessa à página. */
 export async function pedir(req: Objeto, corpo: (r: Objeto) => unknown) {
   try {
     const r = await gateway.enviar(req);

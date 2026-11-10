@@ -1,11 +1,9 @@
-// Cliente TCP do Gateway, usado só pelos Route Handlers (roda no servidor Node, nunca no navegador).
 import fs from "node:fs";
 import net from "node:net";
 import path from "node:path";
 import protobuf from "protobufjs";
 import { enquadrar, extrair } from "./framing";
 
-// O mesmo .proto da equipe, carregado em tempo de execução (sem geração de código).
 const root = protobuf.parse(fs.readFileSync(path.join(process.cwd(), "..", "proto", "aquario.proto"), "utf8")).root;
 const Requisicao = root.lookupType("aquario.Requisicao");
 const Resposta = root.lookupType("aquario.Resposta");
@@ -24,7 +22,6 @@ class ConexaoGateway {
   private pendente?: Pendente;
   private fila: Promise<unknown> = Promise.resolve();
 
-  /** A Resposta não tem id de correlação, então as requisições são enviadas uma por vez. */
   enviar(req: Objeto): Promise<Objeto> {
     const executar = () => this.enviarAgora(req);
     const p = this.fila.then(executar, executar);
@@ -90,6 +87,5 @@ class ConexaoGateway {
   }
 }
 
-// Uma conexão só por processo (sobrevive ao hot reload do `next dev`).
 const global = globalThis as unknown as { __gateway?: ConexaoGateway };
 export const gateway = (global.__gateway ??= new ConexaoGateway());

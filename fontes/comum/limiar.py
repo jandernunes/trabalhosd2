@@ -1,9 +1,7 @@
 class DetectorLimiar:
-    """Dispara um evento ao cruzar o limiar, repete no máximo a cada `repetir_s` e rearma com histerese."""
-
     def __init__(self, limiar: float, abaixo: bool, histerese: float = 0.1, repetir_s: float = 60):
         self.limiar = limiar
-        self.abaixo = abaixo  # True: alerta quando valor < limiar (pH); False: valor > limiar (temperatura)
+        self.abaixo = abaixo
         self.histerese = histerese
         self.repetir_s = repetir_s
         self.em_alerta = False

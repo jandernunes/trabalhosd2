@@ -1,6 +1,6 @@
 import { pedir } from "@/lib/api";
 
-export const runtime = "nodejs"; // o módulo `net` (TCP) não existe no runtime Edge
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {

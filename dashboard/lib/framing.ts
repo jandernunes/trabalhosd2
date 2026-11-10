@@ -1,12 +1,9 @@
-// Enquadramento do protocolo Cliente <-> Gateway: 4 bytes (uint32 big-endian) com o tamanho + mensagem.
-
 export function enquadrar(corpo: Uint8Array): Buffer {
   const cabecalho = Buffer.alloc(4);
   cabecalho.writeUInt32BE(corpo.length, 0);
   return Buffer.concat([cabecalho, Buffer.from(corpo)]);
 }
 
-/** Separa as mensagens completas do buffer; o que sobrar (mensagem pela metade) volta em `resto`. */
 export function extrair(buffer: Buffer): { mensagens: Buffer[]; resto: Buffer } {
   const mensagens: Buffer[] = [];
   let b = buffer;

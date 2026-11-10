@@ -14,7 +14,6 @@ export default function Painel() {
   const [alertas, setAlertas] = useState<Leitura[]>([]);
   const vistos = useRef(new Set<string>());
 
-  // O proto não tem lista de eventos: a página coleta as leituras com evento=true enquanto está aberta.
   useEffect(() => {
     for (const f of fontes ?? []) {
       const l = f.ultimaLeitura;

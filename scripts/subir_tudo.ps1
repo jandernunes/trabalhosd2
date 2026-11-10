@@ -1,14 +1,7 @@
-﻿<#
-.SYNOPSIS
-  Sobe o sistema inteiro: uma janela de terminal por processo, com título.
-.EXAMPLE
-  ./scripts/subir_tudo.ps1 -IpLocal 192.168.0.33 -Backend sim
-  ./scripts/subir_tudo.ps1 -IpLocal 192.168.0.33 -Backend real -PhComCo2 6.2 -TauS 30
-#>
-param(
+﻿param(
     [Parameter(Mandatory = $true)][string]$IpLocal,
     [ValidateSet("sim", "real")][string]$Backend = "sim",
-    [double]$PhComCo2 = 6.6,                 # 6.2 para demonstrar o alerta de pH
+    [double]$PhComCo2 = 6.6,
     [double]$TauS = 60,
     [ValidateSet("normal", "superaquecimento")][string]$Cenario = "normal",
     [switch]$SemDashboard,
@@ -37,7 +30,6 @@ function Abrir([string]$titulo, [string]$comando, [string]$pasta = $raiz) {
 }
 
 Remove-Item $pids -ErrorAction SilentlyContinue
-# Fontes primeiro: quando o gateway sobe, o pedido de descoberta inicial já encontra todas (senão esperam o reenvio de 30 s).
 Abrir "tomada-co2" "& '$python' -m fontes.tomada --ip-local $IpLocal --id tomada-co2 --tipo TOMADA_CO2 --porta-grpc 50052 --backend $tomada --failsafe"
 Abrir "tomada-luminaria" "& '$python' -m fontes.tomada --ip-local $IpLocal --id tomada-luminaria --tipo TOMADA_LUMINARIA --porta-grpc 50053 --backend $tomada"
 Abrir "luminaria-smartled" "& '$python' -m fontes.luminaria --ip-local $IpLocal --backend $luz"

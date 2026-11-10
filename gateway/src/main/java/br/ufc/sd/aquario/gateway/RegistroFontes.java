@@ -10,14 +10,13 @@ import br.ufc.sd.aquario.proto.Status;
 import java.util.Comparator;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** Fontes conhecidas pelo Gateway: endereço, estado, última leitura e se estão online. */
 final class RegistroFontes {
 
     static final class Entrada {
         volatile DiscoveryResponse info;
         volatile Status estado;
         volatile Leitura ultima;
-        volatile long vistoEm;   // última leitura recebida (a descoberta não conta: uma fonte em falha ainda responde a ela)
+        volatile long vistoEm;
         volatile boolean online = true;
     }
 
@@ -48,7 +47,6 @@ final class RegistroFontes {
         }
         e.ultima = l;
         e.vistoEm = System.currentTimeMillis();
-        // mantém o estado coerente com a leitura (ex.: tomada ligada pelo timer do app)
         Status.Builder s = e.estado.toBuilder();
         for (Medida m : l.getMedidasList()) {
             if (m.getNome().equals("ligada")) {

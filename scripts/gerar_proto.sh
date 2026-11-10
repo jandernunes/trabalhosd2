@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-# Gera o código Python do proto em gen/python (o Java gera sozinho no `mvn package`; o dashboard lê o .proto direto).
 set -e
 RAIZ="$(cd "$(dirname "$0")/.." && pwd)"
 PY="python3"

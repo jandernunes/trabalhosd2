@@ -11,10 +11,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-/** Cliente gRPC das fontes controláveis: traduz o Comando do cliente para o RPC correspondente. */
 final class ControleFontes {
     private final RegistroFontes registro;
-    private final Map<String, ManagedChannel> canais = new ConcurrentHashMap<>(); // chave: ip:porta
+    private final Map<String, ManagedChannel> canais = new ConcurrentHashMap<>();
 
     ControleFontes(RegistroFontes registro) {
         this.registro = registro;

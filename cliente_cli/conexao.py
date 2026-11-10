@@ -16,7 +16,7 @@ def enviar_msg(sock: socket.socket, msg) -> None:
 def _ler_exato(sock: socket.socket, n: int) -> bytes:
     partes, falta = [], n
     while falta:
-        bloco = sock.recv(falta)  # o TCP pode entregar menos bytes do que o pedido
+        bloco = sock.recv(falta)
         if not bloco:
             raise ConnectionError("conexão fechada pelo gateway")
         partes.append(bloco)
@@ -30,8 +30,6 @@ def receber_msg(sock: socket.socket, tipo):
 
 
 class ConexaoGateway:
-    """Conexão TCP persistente com o Gateway; reconecta uma vez se a conexão tiver caído."""
-
     def __init__(self, host: str, porta: int, timeout: float = 5):
         self.endereco = (host, porta)
         self.timeout = timeout

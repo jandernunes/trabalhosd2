@@ -59,8 +59,6 @@ button:disabled { cursor: default; opacity: 0.55; }
 :focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
 .mono { font-family: var(--mono); font-size: 12px; }
 
-/* ---------- Barra superior ---------- */
-
 .topo {
   position: sticky; top: 0; z-index: 10;
   background: var(--topo);
@@ -101,8 +99,6 @@ button:disabled { cursor: default; opacity: 0.55; }
 }
 .botao-icone:hover { background: var(--superficie-2); color: var(--texto); }
 
-/* ---------- Estrutura ---------- */
-
 main { max-width: 1320px; margin: 0 auto; padding: 24px 24px 32px; }
 .secao + .secao { margin-top: 32px; }
 .secao-cabecalho { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 14px; }
@@ -135,8 +131,6 @@ main { max-width: 1320px; margin: 0 auto; padding: 24px 24px 32px; }
 .vazio p { font-size: 13px; }
 .vazio-texto { color: var(--texto-3); font-size: 13px; padding: 18px 0; text-align: center; }
 
-/* ---------- Selos ---------- */
-
 .selo {
   display: inline-flex; align-items: center; gap: 6px; flex: none;
   font-size: 11.5px; font-weight: 600; padding: 3px 9px; border-radius: 999px;
@@ -146,8 +140,6 @@ main { max-width: 1320px; margin: 0 auto; padding: 24px 24px 32px; }
 .selo.ok { --cor-selo: var(--ok); }
 .selo.alerta { --cor-selo: var(--alerta); }
 .selo.perigo { --cor-selo: var(--perigo); }
-
-/* ---------- Cartão de fonte ---------- */
 
 .cartao {
   display: flex; flex-direction: column; gap: 16px;
@@ -205,8 +197,6 @@ main { max-width: 1320px; margin: 0 auto; padding: 24px 24px 32px; }
   animation: brilho 1.4s infinite;
 }
 @keyframes brilho { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
-
-/* ---------- Controles ---------- */
 
 .switch {
   position: relative; flex: none; width: 40px; height: 22px; padding: 0;
@@ -278,8 +268,6 @@ input[type="number"]:hover { border-color: var(--borda-forte); }
   background: color-mix(in srgb, var(--acento) 10%, transparent);
 }
 
-/* ---------- Consultas ---------- */
-
 .consulta-resultado { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--borda); transition: opacity 0.15s; }
 .consulta-resultado.carregando { opacity: 0.55; }
 .consulta-descricao { color: var(--texto-2); font-size: 13px; margin-bottom: 10px; }
@@ -289,8 +277,6 @@ td { padding: 9px 4px; border-bottom: 1px solid var(--borda); }
 tr:last-child td { border-bottom: 0; }
 td.num { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
 td.unid { width: 1%; padding-left: 8px; white-space: nowrap; color: var(--texto-3); }
-
-/* ---------- Alertas ---------- */
 
 .contador {
   min-width: 22px; padding: 1px 7px; border-radius: 999px; text-align: center;
@@ -312,8 +298,6 @@ td.unid { width: 1%; padding-left: 8px; white-space: nowrap; color: var(--texto-
 
 .erro { color: var(--perigo); font-size: 12.5px; }
 
-/* ---------- Gráficos (Recharts) ---------- */
-
 .grafico .painel-cabecalho { margin-bottom: 8px; }
 .legenda { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 4px; color: var(--texto-3); font-size: 12px; }
 .legenda span { display: inline-flex; align-items: center; gap: 6px; }
@@ -334,8 +318,6 @@ td.unid { width: 1%; padding-left: 8px; white-space: nowrap; color: var(--texto-
 .dica-linha { display: flex; align-items: center; gap: 8px; }
 .dica-linha span { flex: 1; color: var(--texto-2); }
 .dica-linha strong { font-variant-numeric: tabular-nums; }
-
-/* ---------- Rodapé ---------- */
 
 .rodape {
   max-width: 1320px; margin: 0 auto; padding: 8px 24px 32px;

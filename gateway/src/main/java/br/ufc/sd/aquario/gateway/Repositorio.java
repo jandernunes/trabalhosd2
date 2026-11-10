@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.ToLongFunction;
 
-/** Persistência em SQLite e as consultas agregadas. Cada Medida de uma Leitura vira uma linha. */
 final class Repositorio implements AutoCloseable {
 
     record Amostra(long ts, double valor) {
@@ -95,8 +94,6 @@ final class Repositorio implements AutoCloseable {
         }
     }
 
-    // ---- consultas ------------------------------------------------------------------------------
-
     static long desde(long agora, int janelaMin) {
         return agora - (janelaMin > 0 ? janelaMin : 60) * 60_000L;
     }
@@ -119,7 +116,6 @@ final class Repositorio implements AutoCloseable {
                 .build();
     }
 
-    /** Energia em Wh: trapézio entre leituras consecutivas; lacunas maiores que maxLacunaMs (fonte offline) são ignoradas. */
     static double integrarWh(List<Amostra> s, long maxLacunaMs) {
         double wh = 0;
         for (int i = 1; i < s.size(); i++) {
@@ -184,7 +180,6 @@ final class Repositorio implements AutoCloseable {
         }
     }
 
-    /** Coeficiente de variação (desvio/média) por fonte e medida; devolve as 5 maiores, a primeira é a resposta. */
     synchronized ResultadoConsulta maiorVariacao(int janelaMin, long agora) throws SQLException {
         record Cv(String chave, double cv) {
         }
@@ -219,7 +214,7 @@ final class Repositorio implements AutoCloseable {
         SerieHistorica.Builder b = SerieHistorica.newBuilder().setFonteId(fonte).setMedida(medida);
         int n = s.size();
         int k = maxPontos > 0 && n > maxPontos ? maxPontos : n;
-        for (int i = 0; i < k; i++) {  // amostragem uniforme, sempre incluindo o último ponto
+        for (int i = 0; i < k; i++) {
             Amostra a = s.get(k == n ? i : (int) Math.round((double) i * (n - 1) / (k - 1)));
             b.addPontos(Ponto.newBuilder().setTimestampMs(a.ts()).setValor(a.valor()));
         }

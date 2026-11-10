@@ -5,7 +5,7 @@ import aquario_pb2 as pb
 from .descoberta import Descoberta
 from .log import log
 
-Medidas = list[tuple[str, float, str]]  # (nome, valor, unidade)
+Medidas = list[tuple[str, float, str]]
 
 
 class EnviadorLeituras:
@@ -29,7 +29,7 @@ class EnviadorLeituras:
             leitura.medidas.add(nome=nome, valor=float(valor), unidade=unidade)
         try:
             self.sock.sendto(leitura.SerializeToString(), destino)
-        except OSError as e:  # rede fora do ar (ex.: Wi-Fi voltando da hibernação): tenta de novo na próxima amostra
+        except OSError as e:
             log("DADOS", f"falha ao enviar leitura: {e}")
             return False
         return True

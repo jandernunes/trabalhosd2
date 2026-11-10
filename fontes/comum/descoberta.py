@@ -13,22 +13,19 @@ PORTA = 50000
 
 
 class Descoberta:
-    """Escuta os DiscoveryRequest do Gateway (multicast) e responde em unicast."""
-
     def __init__(self, ip_local: str, montar_resposta: Callable[[], pb.DiscoveryResponse]):
         self.ip_local = ip_local
         self.montar_resposta = montar_resposta
-        self.gateway: tuple[str, int] | None = None  # (gateway_ip, porta_dados)
-        self.ultimo_pedido_em: float | None = None  # time.monotonic() do último pedido (failsafe)
+        self.gateway: tuple[str, int] | None = None
+        self.ultimo_pedido_em: float | None = None
 
     def iniciar(self) -> None:
         threading.Thread(target=self._laco, daemon=True, name="descoberta").start()
 
     def _laco(self) -> None:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # várias fontes no mesmo PC
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind(("", PORTA))
-        # Amarra a inscrição à interface da rede local (com VPN/WSL o padrão do SO pode ser outra).
         mreq = socket.inet_aton(GRUPO) + socket.inet_aton(self.ip_local)
         s.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
         resposta = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

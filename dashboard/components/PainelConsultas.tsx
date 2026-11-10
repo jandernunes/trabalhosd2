@@ -38,7 +38,7 @@ export default function PainelConsultas() {
   function mudarJanela(minutos: number) {
     setJanela(minutos);
     const c = CONSULTAS.find((c) => c.tipo === ativa);
-    if (c) consultar(c.tipo, c.extra, minutos); // refaz a consulta aberta com a nova janela
+    if (c) consultar(c.tipo, c.extra, minutos);
   }
 
   return (

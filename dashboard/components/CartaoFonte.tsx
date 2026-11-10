@@ -17,7 +17,7 @@ export default function CartaoFonte({ fonte, aoMudar }: { fonte: InfoFonte; aoMu
   const [ocupado, setOcupado] = useState(false);
   const estado = fonte.estado;
   const intensidade = estado?.parametros?.intensidade;
-  const [brilho, setBrilho] = useState<number | null>(null); // valor do slider enquanto o usuário arrasta
+  const [brilho, setBrilho] = useState<number | null>(null);
   const [rampa, setRampa] = useState(String(estado?.parametros?.rampa_s ?? 0));
 
   async function executar(acao: object) {
@@ -42,7 +42,6 @@ export default function CartaoFonte({ fonte, aoMudar }: { fonte: InfoFonte; aoMu
   const principal = medidas[0];
   const ligada = !!estado?.ligada;
 
-  // Sensores: pH alerta abaixo do limiar, temperatura acima (igual ao DetectorLimiar das fontes).
   const limiar = fonte.controlavel ? undefined : estado?.parametros?.limiar;
   const abaixo = fonte.tipo === "SENSOR_PH";
   const foraDoLimite = limiar !== undefined && principal !== undefined
@@ -104,7 +103,6 @@ export default function CartaoFonte({ fonte, aoMudar }: { fonte: InfoFonte; aoMu
                 <span className="controle-rotulo">Intensidade</span>
                 <span className="controle-valor">{brilho ?? intensidade}%</span>
               </div>
-              {/* envia só ao soltar (ou ao usar o teclado), não a cada pixel; lê o valor do elemento, não do estado */}
               <input type="range" min={0} max={100} value={brilho ?? intensidade} aria-label="Intensidade da luminária"
                 style={{ "--progresso": `${brilho ?? intensidade}%` } as CSSProperties}
                 onChange={(e) => setBrilho(Number(e.target.value))}

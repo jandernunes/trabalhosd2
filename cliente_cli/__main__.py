@@ -39,7 +39,6 @@ class Cli(cmd.Cmd):
         super().__init__()
         self.conexao = conexao
 
-    # ---- infraestrutura ------------------------------------------------------------------------
     def _pedir(self, **campos) -> pb.Resposta | None:
         try:
             resp = self.conexao.enviar(pb.Requisicao(**campos))
@@ -65,7 +64,6 @@ class Cli(cmd.Cmd):
     def default(self, linha):
         print(f"Comando desconhecido: {linha.split()[0]}. Digite 'ajuda'.")
 
-    # ---- fontes e comandos ----------------------------------------------------------------------
     def do_fontes(self, _):
         """fontes — lista as fontes, estados e últimas leituras"""
         resp = self._pedir(listar=pb.ListarFontes())
@@ -112,7 +110,6 @@ class Cli(cmd.Cmd):
             raise ValueError("use on ou off")
         self._comando(fonte, falha=pb.ComandoFalha(ativa=estado == "on"))
 
-    # ---- consultas ------------------------------------------------------------------------------
     def _consulta(self, **campos):
         resp = self._pedir(consulta=pb.Consulta(**campos))
         if resp is None:
@@ -157,7 +154,6 @@ class Cli(cmd.Cmd):
         print(tabela(["HORA", a[1].upper()], [[time.strftime("%H:%M:%S", time.localtime(p.timestamp_ms / 1000)),
                                                numero(round(p.valor, 3))] for p in pontos]))
 
-    # ---- utilidades -----------------------------------------------------------------------------
     def do_ajuda(self, _):
         """ajuda — mostra os comandos"""
         for nome in ["fontes", "ligar", "desligar", "param", "falha", "media", "consumo", "tempo_ligado", "ph",

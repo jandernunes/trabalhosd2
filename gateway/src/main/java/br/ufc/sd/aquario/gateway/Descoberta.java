@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/** Envia DiscoveryRequest ao grupo multicast (ao iniciar e a cada 30 s) e registra os DiscoveryResponse. */
 final class Descoberta {
     static final String GRUPO = "239.10.10.10";
     static final int PORTA_MULTICAST = 50000;
@@ -39,11 +38,10 @@ final class Descoberta {
         if (nif == null) {
             throw new IllegalArgumentException("--ip-local " + ipLocal + " não pertence a nenhuma interface desta máquina");
         }
-        // Interface fixada: com VPN/WSL/Hyper-V o padrão do SO mandaria o multicast para a rede errada.
         MulticastSocket envio = new MulticastSocket(new InetSocketAddress(local, 0));
         envio.setNetworkInterface(nif);
         envio.setTimeToLive(1);
-        envio.setOption(StandardSocketOptions.IP_MULTICAST_LOOP, true); // fontes no mesmo PC também recebem
+        envio.setOption(StandardSocketOptions.IP_MULTICAST_LOOP, true);
 
         DatagramSocket respostas = new DatagramSocket(PORTA_RESPOSTA);
         Thread t = new Thread(() -> receber(respostas), "descoberta-respostas");

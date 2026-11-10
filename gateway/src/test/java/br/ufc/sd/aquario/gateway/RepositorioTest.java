@@ -53,7 +53,7 @@ class RepositorioTest {
     @Test
     void lacunaMaiorQueOLimiteNaoContaComoLigada() {
         List<Repositorio.Amostra> s = List.of(new Repositorio.Amostra(0, 1), new Repositorio.Amostra(10_000, 1),
-                new Repositorio.Amostra(10_000 + H, 1)); // 1 h sem leituras: fonte offline
+                new Repositorio.Amostra(10_000 + H, 1));
         assertEquals(10_000 / (double) H, Repositorio.horasLigada(s, 30_000), 1e-12);
         assertEquals(0, Repositorio.integrarWh(s, 5_000), 1e-12);
     }
@@ -63,7 +63,7 @@ class RepositorioTest {
         salvar("sensor-temperatura", "temperatura", 24, AGORA - 3000, false);
         salvar("sensor-temperatura", "temperatura", 26, AGORA - 2000, false);
         salvar("sensor-temperatura", "temperatura", 28, AGORA - 1000, false);
-        salvar("sensor-temperatura", "temperatura", 99, AGORA - 2 * H, false); // fora da janela de 60 min
+        salvar("sensor-temperatura", "temperatura", 99, AGORA - 2 * H, false);
         ResultadoConsulta r = repo.mediaDesvio("sensor-temperatura", "temperatura", 60, AGORA);
         assertEquals(26, valor(r, "media"), 1e-9);
         assertEquals(Math.sqrt(8.0 / 3), valor(r, "desvio_padrao"), 1e-9);

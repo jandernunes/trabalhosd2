@@ -6,7 +6,6 @@ import Icone from "./Icone";
 type Tema = "claro" | "escuro";
 
 export default function AlternarTema() {
-  // O tema inicial é aplicado no <head> (layout.tsx), antes da hidratação; aqui só lemos o que ficou.
   const [tema, setTema] = useState<Tema | null>(null);
 
   useEffect(() => {

@@ -7,7 +7,7 @@ from fontes.comum.log import log
 import aquario_pb2 as pb
 from .backends import LuzMagicHome, LuzSimulada
 
-TOLERANCIA_PCT = 2  # arredondamento 0–255 <-> 0–100 no controlador
+TOLERANCIA_PCT = 2
 
 
 class Luminaria(Fonte):
@@ -41,7 +41,7 @@ class Luminaria(Fonte):
     def eventos(self, medidas, agora):
         ligada, intensidade = self._esperado
         if self._ligada != ligada or abs(self._intensidade - intensidade) > TOLERANCIA_PCT:
-            self._esperado = (self._ligada, self._intensidade)  # mudou por fora (app Magic Home)
+            self._esperado = (self._ligada, self._intensidade)
             return ["mudou_estado"]
         return []
 
@@ -56,7 +56,7 @@ class Luminaria(Fonte):
 
     def set_power(self, ligada: bool):
         with self.lock:
-            self._geracao_rampa += 1  # cancela rampa em andamento
+            self._geracao_rampa += 1
             self.backend.ligar(ligada)
             self._ligada = ligada
             self._esperado = (ligada, self._intensidade)
@@ -92,7 +92,7 @@ class Luminaria(Fonte):
             self._aplicar(alvo)
             return
 
-        def rampa():  # amanhecer/entardecer: um passo por segundo
+        def rampa():
             log("RAMPA", f"{inicio}% -> {alvo}% em {passos}s")
             for i in range(1, passos + 1):
                 if self._geracao_rampa != geracao:

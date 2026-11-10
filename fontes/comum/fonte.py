@@ -9,7 +9,7 @@ from .log import log
 
 
 class ErroEquipamento(Exception):
-    """Falha de comunicação com o equipamento real (vira UNAVAILABLE no gRPC)."""
+    pass
 
 
 def parser_base(descricao: str) -> argparse.ArgumentParser:
@@ -20,15 +20,10 @@ def parser_base(descricao: str) -> argparse.ArgumentParser:
 
 
 class Fonte:
-    """Esqueleto comum: descoberta, laço de amostragem, envio periódico e envio imediato por evento.
-
-    Subclasses definem fonte_id/tipo e implementam ler(), eventos() e, se controláveis, os comandos.
-    """
-
     fonte_id = ""
     tipo = pb.TIPO_DESCONHECIDO
     controlavel = False
-    amostragem_s = 1.0  # com que frequência o equipamento é lido para detectar eventos
+    amostragem_s = 1.0
 
     def __init__(self, args):
         self.ip_local = args.ip_local
@@ -40,7 +35,6 @@ class Fonte:
         self.descoberta = Descoberta(self.ip_local, self.resposta_descoberta)
         self.enviador = EnviadorLeituras(self.descoberta, self.fonte_id, self.tipo)
 
-    # ---- a implementar pelas subclasses -------------------------------------------------------
     def ler(self) -> Medidas:
         raise NotImplementedError
 
@@ -62,7 +56,6 @@ class Fonte:
     def set_parametro_especifico(self, nome: str, valor: float) -> None:
         raise ValueError(f"parâmetro desconhecido: {nome}")
 
-    # ---- comum --------------------------------------------------------------------------------
     def status(self) -> pb.Status:
         with self.lock:
             return pb.Status(ligada=self.ligada(), intervalo_envio_s=self.intervalo, parametros=self.parametros(),
@@ -90,7 +83,7 @@ class Fonte:
         self.descoberta.iniciar()
         if self.controlavel:
             from .servidor import iniciar_grpc
-            self._grpc = iniciar_grpc(self, self.porta_grpc)  # guardar a referência: o servidor para se for coletado
+            self._grpc = iniciar_grpc(self, self.porta_grpc)
         log("FONTE", f"{self.fonte_id} iniciada (amostragem {self.amostragem_s}s, envio a cada {self.intervalo}s)")
         ultimo_envio = 0.0
         while True:
@@ -99,7 +92,6 @@ class Fonte:
                 try:
                     medidas = self.ler()
                     if self.descoberta.gateway is None:
-                        # ainda não há para quem enviar: o evento fica para quando o gateway aparecer
                         self._acordar.wait(self.amostragem_s)
                         continue
                     motivos = self.eventos(medidas, agora)
@@ -108,7 +100,7 @@ class Fonte:
                             log("EVENTO", f"{','.join(motivos)} {formatar(medidas)}")
                             ultimo_envio = agora
                     elif agora - ultimo_envio >= self.intervalo:
-                        if self.enviador.enviar(medidas):  # só conta se enviou: a 1ª leitura sai logo após a descoberta
+                        if self.enviador.enviar(medidas):
                             log("DADOS", formatar(medidas))
                             ultimo_envio = agora
                 except ErroEquipamento as e:
@@ -116,7 +108,7 @@ class Fonte:
             self._acordar.wait(self.amostragem_s)
             if self._acordar.is_set():
                 self._acordar.clear()
-                ultimo_envio = 0.0  # intervalo mudou: envia já com o novo ritmo
+                ultimo_envio = 0.0
 
 
 def formatar(medidas: Medidas) -> str:

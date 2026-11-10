@@ -17,7 +17,6 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/** Servidor TCP do Cliente: cada mensagem vem precedida de 4 bytes (uint32 big-endian) com o tamanho. */
 final class ServidorClientes implements Runnable {
     static final int TAMANHO_MAXIMO = 1 << 20;
 
@@ -59,7 +58,7 @@ final class ServidorClientes implements Runnable {
                     return;
                 }
                 byte[] corpo = new byte[n];
-                in.readFully(corpo); // bloqueia até chegar a mensagem inteira, mesmo que venha em pedaços
+                in.readFully(corpo);
                 byte[] resposta = processar(Requisicao.parseFrom(corpo)).toByteArray();
                 out.writeInt(resposta.length);
                 out.write(resposta);

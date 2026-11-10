@@ -9,7 +9,6 @@ import java.net.DatagramSocket;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-/** Recebe as Leitura (UDP), atualiza o registro, persiste e repassa os eventos. */
 final class ReceptorDados implements Runnable {
     private final DatagramSocket socket;
     private final RegistroFontes registro;
@@ -31,7 +30,6 @@ final class ReceptorDados implements Runnable {
             try {
                 socket.receive(p);
                 Leitura l = Leitura.parseFrom(Arrays.copyOf(p.getData(), p.getLength()));
-                // horário de chegada no Gateway: as janelas das consultas não dependem do relógio das fontes
                 repositorio.salvar(l, System.currentTimeMillis());
                 if (registro.atualizarLeitura(l) == null) {
                     Log.info("DADOS", l.getFonteId() + " ainda não registrada (aguardando descoberta)");

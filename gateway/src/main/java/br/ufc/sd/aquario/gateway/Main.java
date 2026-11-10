@@ -52,7 +52,6 @@ public final class Main {
                 + PORTA_CLIENTES + " | banco " + arquivo);
     }
 
-    /** Regra de segurança: pH baixo = excesso de CO2, então o Gateway desliga a tomada do CO2. */
     private static void desligarCo2(ControleFontes controle, Leitura alerta) {
         try {
             controle.executar(Comando.newBuilder().setFonteId("tomada-co2")

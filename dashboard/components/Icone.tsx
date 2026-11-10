@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 
-// Ícones de traço (estilo Lucide) desenhados inline, sem dependência extra.
 const CAMINHOS = {
   folha: (
     <>

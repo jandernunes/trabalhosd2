@@ -7,10 +7,8 @@ from fontes.comum.log import log
 import aquario_pb2 as pb
 from .backends import TomadaSimulada, TomadaTuya
 
-FAILSAFE_S = 90         # sem DiscoveryRequest por esse tempo -> desliga o CO2
+FAILSAFE_S = 90
 SEM_CONSUMO_W = 0.5
-# ligada sem consumo por esse tempo -> evento (lâmpada queimada, solenoide com defeito).
-# A tomada Gaya/Tuya leva ~30 s para atualizar a potência depois de ligar (medido no hardware real).
 SEM_CONSUMO_S = 60
 
 
@@ -29,7 +27,7 @@ class Tomada(Fonte):
             self.backend = TomadaSimulada(potencia)
         self.failsafe = args.failsafe
         try:
-            self._estado = self.backend.ler()   # última leitura conhecida
+            self._estado = self.backend.ler()
         except ErroEquipamento as e:
             log("ERRO", f"sem resposta da tomada ao iniciar ({e}); assumindo desligada")
             self._estado = {"ligada": False, "potencia": 0.0, "corrente": 0.0, "tensao": 0.0}
@@ -50,7 +48,7 @@ class Tomada(Fonte):
     def eventos(self, medidas, agora):
         motivos = []
         e = self._estado
-        if e["ligada"] != self._ligada_esperada:   # mudou por fora do sistema (timer do app, botão físico)
+        if e["ligada"] != self._ligada_esperada:
             self._ligada_esperada = e["ligada"]
             motivos.append("mudou_estado")
         if e["ligada"] and e["potencia"] < SEM_CONSUMO_W:

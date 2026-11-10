@@ -11,7 +11,7 @@ export type Serie = {
   cor: string;
   unidade?: string;
   eixo?: "esq" | "dir";
-  degrau?: boolean; // liga/desliga desenhado em degraus
+  degrau?: boolean;
 };
 
 function useSerie(s: Serie, janelaMin: number) {
@@ -23,7 +23,6 @@ function horaCurta(ms: number) {
   return new Date(ms).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 }
 
-// Até 2 casas, sem zeros à direita: com 1 casa, ticks como 7.05 e 7.1 viravam rótulos repetidos.
 function marca(v: number) {
   return String(Math.round(v * 100) / 100);
 }
@@ -47,7 +46,6 @@ function Dica({ active, payload, label }: TooltipProps<number, string>) {
 export default function Grafico({ titulo, series, janelaMin = 30, dominioDir }: {
   titulo: string; series: Serie[]; janelaMin?: number; dominioDir?: [number, number];
 }) {
-  // Um hook por série: a lista de séries de cada gráfico é fixa, então a ordem dos hooks não muda.
   const dados = series.map((s) => useSerie(s, janelaMin).data ?? []);
   const direita = series.find((s) => s.eixo === "dir");
   const ultimo = dados[0][dados[0].length - 1];

@@ -1,5 +1,3 @@
-// Formato JSON das mensagens do aquario.proto como o protobufjs entrega (camelCase, enums como texto).
-
 export type Medida = { nome: string; valor: number; unidade: string };
 
 export type Leitura = {

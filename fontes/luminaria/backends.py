@@ -20,8 +20,6 @@ class LuzSimulada:
 
 
 class LuzMagicHome:
-    """Controlador Magic Home 'Controller Dimmable (0x41)': brilho no canal warm white, TCP 5577 sem chave."""
-
     def __init__(self, ip: str):
         self.ip = ip
         self._bulb = None
@@ -31,7 +29,7 @@ class LuzMagicHome:
             from flux_led import WifiLedBulb
             try:
                 self._bulb = WifiLedBulb(self.ip, timeout=3)
-            except Exception as e:  # flux_led levanta exceções variadas de socket
+            except Exception as e:
                 raise ErroEquipamento(str(e)) from e
         return self._bulb
 
@@ -41,7 +39,7 @@ class LuzMagicHome:
         except ErroEquipamento:
             raise
         except Exception as e:
-            self._bulb = None  # reconecta na próxima
+            self._bulb = None
             raise ErroEquipamento(str(e)) from e
 
     def ler(self) -> tuple[bool, int]:

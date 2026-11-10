@@ -22,7 +22,6 @@ class SensorPh(Fonte):
         self.tau = args.tau_s
         self.ph = args.ph_sem_co2
         self.detector = DetectorLimiar(args.limiar, abaixo=True)
-        # Simplificação da simulação: o pH "sabe" do CO2 lendo o estado da tomada pelo gRPC (só leitura).
         self.co2 = pb_grpc.FonteControlavelStub(grpc.insecure_channel(args.co2_grpc))
         self.co2_ligado = False
         self._ultimo = time.monotonic()

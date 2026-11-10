@@ -3,7 +3,6 @@ import { numero, pedir } from "@/lib/api";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// /api/historico?fonte_id=sensor-ph&medida=ph&janela_min=30&max_pontos=200
 export async function GET(req: Request) {
   const q = new URL(req.url).searchParams;
   return pedir(

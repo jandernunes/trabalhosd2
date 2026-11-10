@@ -4,12 +4,11 @@ from fontes.comum.fonte import ErroEquipamento
 
 
 def converter_dps(dps: dict) -> dict:
-    """DPS da tomada Gaya/Tuya -> medidas (mapeamento confirmado no tinytuya wizard)."""
     return {
         "ligada": bool(dps.get("1", False)),
-        "corrente": float(dps.get("18", 0)),         # mA
-        "potencia": float(dps.get("19", 0)) / 10,    # W
-        "tensao": float(dps.get("20", 0)) / 10,      # V
+        "corrente": float(dps.get("18", 0)),
+        "potencia": float(dps.get("19", 0)) / 10,
+        "tensao": float(dps.get("20", 0)) / 10,
     }
 
 

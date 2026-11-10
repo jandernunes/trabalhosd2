@@ -14,7 +14,6 @@ def carregar(caminho: str | None) -> dict:
 
 
 def dispositivo_tuya(config: dict, fonte_id: str) -> dict:
-    """Junta o que está no config.json com o devices.json do `tinytuya wizard` (as chaves ficam só lá)."""
     entrada = dict(config.get("tomadas", {}).get(fonte_id) or {})
     if not entrada:
         raise SystemExit(f"'{fonte_id}' não está em tomadas no config.json")
@@ -34,6 +33,6 @@ def dispositivo_tuya(config: dict, fonte_id: str) -> dict:
         entrada.setdefault("local_key", achado["key"])
         entrada.setdefault("ip", achado.get("ip") or "")
         entrada.setdefault("version", float(achado.get("version") or 3.3))
-    entrada["ip"] = entrada.get("ip") or "Auto"  # tinytuya procura pelo device id na rede
+    entrada["ip"] = entrada.get("ip") or "Auto"
     entrada.setdefault("version", 3.3)
     return entrada

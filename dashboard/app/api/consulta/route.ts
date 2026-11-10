@@ -3,7 +3,6 @@ import { numero, pedir } from "@/lib/api";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// /api/consulta?tipo=CONSUMO_WH&janela_min=60[&fonte_id=&medida=]
 export async function GET(req: Request) {
   const q = new URL(req.url).searchParams;
   return pedir(

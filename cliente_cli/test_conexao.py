@@ -3,7 +3,7 @@ import struct
 import threading
 import unittest
 
-import cliente_cli  # noqa: F401  (ajusta o sys.path para gen/python)
+import cliente_cli  # noqa: F401
 import aquario_pb2 as pb
 from cliente_cli.conexao import receber_msg
 
